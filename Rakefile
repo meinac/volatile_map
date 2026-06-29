@@ -4,7 +4,7 @@ require "bundler/gem_tasks"
 require "rspec/core/rake_task"
 require "rake/extensiontask"
 
-ENV["VOLATILE_MAP_TEST_HELPERS"] = "1"
+ENV["VOLATILE_MAP_TEST_HELPERS"] = "1" unless ENV["NO_TEST_ENV"]
 
 RSpec::Core::RakeTask.new(:spec)
 
