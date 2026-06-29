@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'objspace'
+
 RSpec.describe VolatileMap do
   let(:map) { VolatileMap.new(5) }
 
@@ -152,6 +154,22 @@ RSpec.describe VolatileMap do
 
         expect(map[:foo]).to eq(:zoo)
       end
+    end
+  end
+
+  describe "key volatility" do
+    it "removes the key from the map" do
+      initial_map_mem_size = ObjectSpace.memsize_of(map)
+
+      VolatileMap.set_test_clock!(6)
+
+      GC.start # This will register the job
+      Thread.pass # This will trigger the job
+
+      new_map_mem_size = ObjectSpace.memsize_of(map)
+
+      expect(map[:foo]).to be_nil
+      expect(new_map_mem_size).to eq(initial_map_mem_size - 2)
     end
   end
 end
