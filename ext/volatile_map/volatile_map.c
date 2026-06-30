@@ -96,10 +96,8 @@ static void rb_compact_volatile_map(void *ptr) {
   vm->storage = rb_gc_location(vm->storage);
 }
 
-static size_t rb_size_volatile_map(const void *ptr) {
-  VolatileMap *vm = (VolatileMap *)ptr;
-
-  return sizeof(VolatileMap) + rb_funcall(vm->storage, rb_intern("size"), 0);
+static size_t rb_size_volatile_map(const void *_ptr) {
+  return sizeof(VolatileMap);
 }
 
 const rb_data_type_t volatile_map_type = {

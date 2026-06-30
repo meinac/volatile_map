@@ -159,17 +159,13 @@ RSpec.describe VolatileMap do
 
   describe "key volatility" do
     it "removes the key from the map" do
-      initial_map_mem_size = ObjectSpace.memsize_of(map)
-
       VolatileMap.set_test_clock!(6)
 
-      GC.start # This will register the job
-      Thread.pass # This will trigger the job
+      GC.start # This will register the postponed job
+      Thread.pass # This will give the VM a chance to run it
 
-      new_map_mem_size = ObjectSpace.memsize_of(map)
-
+      expect(map.size).to eq(0)
       expect(map[:foo]).to be_nil
-      expect(new_map_mem_size).to eq(initial_map_mem_size - 2)
     end
   end
 end
